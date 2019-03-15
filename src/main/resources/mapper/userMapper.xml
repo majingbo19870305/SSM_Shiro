@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mjb.mapper.UserMapper">
+    <insert id="regUser" parameterType="user">
+        insert into xt_user(username,password,salt)values(#{username},#{password},#{salt});
+    </insert>
+    <select id="queryUserByUserName" parameterType="string" resultType="user">
+        select * from xt_user where username=#{username}
+    </select>
+    <select id="queryUserRolesByUserId" parameterType="int" resultType="role">
+        select * from xt_role where id IN (select roleid from xt_user_role where userid=#{userid})
+    </select>
+    <select id="queryUserPermissionByUserid" parameterType="int" resultType="permission">
+        select * from xt_permission where id in(select permissionid from xt_permission_role where roleid in(select roleid from xt_user_role where userid=#{userid}))
+    </select>
+</mapper>
